@@ -32,5 +32,11 @@
   },
   "devDependencies": {
     "supertest": "^0.10.0"
+  },
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "mocha test/ServerSpec.js; RES=$?; kill %1; exit $RES",
+    "build": "grunt build; npm test"
+
   }
 }

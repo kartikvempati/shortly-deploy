@@ -3,6 +3,12 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      options: { separator: ""},
+      dist: {
+        src: ['./public/client/*.js', //backbone views
+          ],
+        dest: 'public/dist/<%= pkg.name %>.js'
+      }
     },
 
     mochaTest: {
@@ -21,19 +27,25 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      target: {
+        files: { 'public/dist/<%= pkg.name %>.min.js':
+        ["./public/dist/shortly-express.js"]
+        }
+      }
     },
 
     jshint: {
       files: [
         // Add filespec list here
+        "./public/dist/shortly-express.js"
       ],
       options: {
-        force: 'true',
-        jshintrc: '.jshintrc',
-        ignores: [
-          'public/lib/**/*.js',
-          'public/dist/**/*.js'
-        ]
+        force: 'false',
+        jshintrc: '.jshintrc'
+        // ignores: [
+        //   'public/lib/**/*.js'
+        //   'public/dist/**/*.js'
+        // ]
       }
     },
 
@@ -92,9 +104,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', [
     'mochaTest'
   ]);
-
-  grunt.registerTask('build', [
-  ]);
+  grunt.registerTask('build', ['concat', 'uglify', 'jshint','test']);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
@@ -104,7 +114,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('deploy', [
+  grunt.registerTask('deploy', ['build'
     // add your deploy tasks here
   ]);
 
